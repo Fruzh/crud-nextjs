@@ -9,19 +9,22 @@ export default function AddBook() {
     const router = useRouter();
     const [isSaving, setIsSaving] = useState(false);
 
-    const addBook = async (book) => {
+    const handleSubmit = async (formData) => {
+        console.log('Submitting FormData:', Array.from(formData.entries()));
         try {
             setIsSaving(true);
             const res = await fetch('/api/books', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(book),
+                body: formData,
             });
+
+            console.log('POST response status:', res.status);
             if (!res.ok) {
-                throw new Error('Failed to add book');
+                const errorData = await res.json();
+                console.error('API error response:', errorData);
+                throw new Error(errorData.error || 'Failed to add book');
             }
+
             window.dispatchEvent(
                 new CustomEvent('showNotification', {
                     detail: {
@@ -32,10 +35,11 @@ export default function AddBook() {
             );
             router.push('/books');
         } catch (error) {
+            console.error('Error adding book:', error);
             window.dispatchEvent(
                 new CustomEvent('showNotification', {
                     detail: {
-                        message: 'Gagal menambahkan buku',
+                        message: error.message,
                         type: 'error',
                     },
                 })
@@ -61,7 +65,10 @@ export default function AddBook() {
     return (
         <>
             <Navbar />
-            <BookForm onSubmit={addBook} />
+            <div className="max-w-7xl mx-auto px-4 py-10 min-h-[80vh]">
+                <h1 className="text-4xl font-extrabold text-gray-900 mb-8">Tambah Buku Baru</h1>
+                <BookForm onSubmit={handleSubmit} />
+            </div>
             <Footer />
         </>
     );

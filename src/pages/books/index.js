@@ -45,6 +45,9 @@ export default function BookList() {
     const [searchQuery, setSearchQuery] = useState('');
     const { ref: loaderRef, inView: loaderInView } = useInView({ threshold: 1 });
     const cardRefs = useRef([]);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
+    const buttonRef = useRef(null);
 
     const categories = [
         'Semua Kategori',
@@ -88,15 +91,15 @@ export default function BookList() {
                     const titleWords = title.split(/\s+/);
                     const authorWords = author.split(/\s+/);
 
-                    return queryWords.every((queryWord) => {                    
-                        const isSubstring = 
+                    return queryWords.every((queryWord) => {
+                        const isSubstring =
                             title.includes(queryWord) ||
                             author.includes(queryWord) ||
                             titleWords.some(word => word.startsWith(queryWord)) ||
                             authorWords.some(word => word.startsWith(queryWord));
                         if (isSubstring) return true;
 
-                        const isWordMatch = 
+                        const isWordMatch =
                             titleWords.some((titleWord) => levenshteinDistance(queryWord, titleWord) <= 2) ||
                             authorWords.some((authorWord) => levenshteinDistance(queryWord, authorWord) <= 2);
                         if (isWordMatch) return true;
@@ -123,6 +126,52 @@ export default function BookList() {
         }
         return result;
     }, [books, selectedCategory, searchQuery]);
+
+    // Tutup dropdown saat klik di luar
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target) &&
+                buttonRef.current &&
+                !buttonRef.current.contains(event.target)
+            ) {
+                setDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    // Navigasi keyboard untuk dropdown
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (!dropdownOpen) return;
+
+            const currentIndex = categories.indexOf(selectedCategory);
+            switch (event.key) {
+                case 'ArrowDown':
+                    event.preventDefault();
+                    setSelectedCategory(categories[(currentIndex + 1) % categories.length]);
+                    break;
+                case 'ArrowUp':
+                    event.preventDefault();
+                    setSelectedCategory(categories[(currentIndex - 1 + categories.length) % categories.length]);
+                    break;
+                case 'Enter':
+                case 'Escape':
+                    event.preventDefault();
+                    setDropdownOpen(false);
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [dropdownOpen, selectedCategory]);
 
     useEffect(() => {
         fetch('/api/books')
@@ -157,17 +206,52 @@ export default function BookList() {
 
     useEffect(() => {
         const updateCardHeights = () => {
-            const heights = cardRefs.current
-                .filter((ref) => ref)
-                .map((ref) => ref.getBoundingClientRect().height || 0);
-            const maxHeight = Math.max(...heights, 200);
-            cardRefs.current.forEach((ref) => {
-                if (ref) ref.style.minHeight = `${maxHeight}px`;
+            const cards = cardRefs.current.filter((ref) => ref);
+            const rows = {};
+
+            cards.forEach((card) => {
+                const top = card.getBoundingClientRect().top;
+                const roundedTop = Math.round(top);
+                if (!rows[roundedTop]) rows[roundedTop] = [];
+                rows[roundedTop].push(card);
+            });
+
+            cards.forEach((card) => {
+                card.style.minHeight = 'auto';
+            });
+
+            Object.values(rows).forEach((rowCards) => {
+                const maxHeight = Math.max(...rowCards.map((card) => card.getBoundingClientRect().height));
+                rowCards.forEach((card) => {
+                    card.style.minHeight = `${maxHeight}px`;
+                });
             });
         };
 
+        let allImages = Array.from(document.querySelectorAll('img'));
+        let loadedCount = 0;
+
+        const checkAndUpdate = () => {
+            loadedCount++;
+            if (loadedCount === allImages.length) {
+                updateCardHeights();
+            }
+        };
+
         if (filteredBooks.length > 0) {
-            updateCardHeights();
+            if (allImages.length === 0) {
+                updateCardHeights();
+            } else {
+                allImages.forEach((img) => {
+                    if (img.complete) {
+                        checkAndUpdate();
+                    } else {
+                        img.addEventListener('load', checkAndUpdate);
+                        img.addEventListener('error', checkAndUpdate);
+                    }
+                });
+            }
+
             window.addEventListener('resize', updateCardHeights);
             return () => window.removeEventListener('resize', updateCardHeights);
         }
@@ -259,53 +343,75 @@ export default function BookList() {
             <div className="max-w-7xl mx-auto px-4 py-10 min-h-[80vh]">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                     <h1 className="text-4xl font-extrabold text-gray-900">Koleksi Buku</h1>
-                    <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                        <div className="relative w-full sm:w-64">
+                    <div className="flex flex-col lg:flex-row gap-4 w-full sm:w-auto">
+                        <div className="relative w-full lg:w-64">
                             <input
                                 type="text"
                                 value={searchQuery}
                                 onChange={handleSearchChange}
                                 placeholder="Cari judul atau penulis..."
-                                className="block w-full px-3 py-2.5 pl-10 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white transition-all duration-200 hover:bg-gray-50 focus:bg-gray-50"
+                                className="block w-full px-3 py-2.5 pl-10 border border-gray-300 rounded-lg shadow-sm text-gray-800 bg-white transition-all duration-200 hover:bg-gray-50 focus:bg-gray-50"
                                 aria-label="Cari buku berdasarkan judul atau penulis"
                             />
                             <span className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
                                 <Search size={20} className="text-gray-500" />
                             </span>
                         </div>
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            <div className="relative w-full sm:w-48">
-                                <select
-                                    value={selectedCategory}
-                                    onChange={(e) => {
-                                        setSelectedCategory(e.target.value);
-                                        setVisible(8);
-                                    }}
-                                    className="block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white appearance-none transition-all duration-200 hover:bg-gray-50 focus:bg-gray-50 pr-10"
-                                    aria-label="Filter buku berdasarkan kategori"
+                        <div className="flex flex-row gap-4 justify-between">
+                            <div className="relative w-48" ref={dropdownRef}>
+                                <button
+                                    ref={buttonRef}
+                                    type="button"
+                                    onClick={() => setDropdownOpen((prev) => !prev)}
+                                    className="flex w-full items-center justify-between px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2  text-gray-800 bg-white hover:bg-gray-50 transition-all duration-200"
+                                    aria-haspopup="listbox"
+                                    aria-expanded={dropdownOpen}
+                                    aria-label="Pilih kategori buku"
                                 >
-                                    {categories.map((cat) => (
-                                        <option key={cat} value={cat}>
-                                            {cat}
-                                        </option>
-                                    ))}
-                                </select>
-                                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                    <span className="truncate">{selectedCategory}</span>
                                     <svg
-                                        className="w-4 h-4 text-gray-500"
+                                        className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : 'rotate-0'}`}
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M19 9l-7 7-7-7"
-                                        />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                                     </svg>
-                                </span>
+                                </button>
+                                {dropdownOpen && (
+                                    <ul
+                                        className="absolute z-10 text-black mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto focus:outline-none"
+                                        role="listbox"
+                                        aria-activedescendant={selectedCategory}
+                                    >
+                                        {categories.map((cat) => (
+                                            <li
+                                                key={cat}
+                                                onClick={() => {
+                                                    setSelectedCategory(cat);
+                                                    setDropdownOpen(false);
+                                                    setVisible(8);
+                                                }}
+                                                className={`px-4 py-2 text-sm cursor-pointer hover:bg-blue-100 transition-colors duration-200 ${
+                                                    selectedCategory === cat ? 'bg-blue-200 font-semibold' : ''
+                                                }`}
+                                                role="option"
+                                                aria-selected={selectedCategory === cat}
+                                                tabIndex={0}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter' || e.key === ' ') {
+                                                        setSelectedCategory(cat);
+                                                        setDropdownOpen(false);
+                                                        setVisible(8);
+                                                    }
+                                                }}
+                                            >
+                                                {cat}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
                             </div>
                             <Link
                                 href="/books/add"
@@ -323,7 +429,7 @@ export default function BookList() {
                         Tidak ada buku tersedia untuk kriteria ini.
                     </p>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
                         {filteredBooks.slice(0, visible).map((b, i) => {
                             const batchIndex = i % 16;
                             const delay = batchIndex * 100;
@@ -336,7 +442,7 @@ export default function BookList() {
                                 >
                                     <div
                                         ref={(el) => (cardRefs.current[i] = el)}
-                                        className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl p-6 flex flex-col text-center items-center cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:scale-102 animate-fadeIn min-w-[200px]"
+                                        className="relative bg-white rounded-xl shadow-lg hover:shadow-2xl pb-6 flex flex-col text-center items-center cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:scale-102 animate-fadeIn min-w-[200px]"
                                         style={{
                                             animationDelay: `${delay}ms`,
                                             animationFillMode: 'both',
@@ -344,18 +450,23 @@ export default function BookList() {
                                     >
                                         <div className="absolute top-4 right-4">
                                             <span
-                                                className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${getCategoryStyles(
+                                                className={`text-sm font-medium px-3 py-0.5 rounded-full shadow-lg ${getCategoryStyles(
                                                     b.category
                                                 )}`}
                                             >
                                                 {b.category || 'Tidak ada kategori'}
                                             </span>
                                         </div>
-                                        <BookText size={64} className="text-blue-600 my-4" />
+                                        <img
+                                            src={b.image || "/default-book.png"}
+                                            alt={b.title}
+                                            className="w-full aspect-[7/8] object-cover rounded-t-xl mb-4 shadow"
+                                        />
+
                                         <h2 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
                                             {b.title}
                                         </h2>
-                                        <p className="text-sm text-gray-600 mb-4 line-clamp-1">
+                                        <p className="text-sm text-gray-600 mb-4 italic line-clamp-1">
                                             oleh {b.author}
                                         </p>
                                         <div className="flex gap-3 mt-auto">
@@ -365,7 +476,8 @@ export default function BookList() {
                                                 onClick={(e) => e.stopPropagation()}
                                                 aria-label={`Edit buku ${b.title}`}
                                             >
-                                                <Pencil size={18} /> Edit
+                                                <Pencil size={18} />
+                                                <span className="hidden sm:inline">Edit</span>
                                             </Link>
                                             <button
                                                 onClick={(e) => {
@@ -376,7 +488,8 @@ export default function BookList() {
                                                 className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm flex items-center gap-1 transition-colors duration-200"
                                                 aria-label={`Hapus buku ${b.title}`}
                                             >
-                                                <Trash size={18} /> Delete
+                                                <Trash size={18} />
+                                                <span className="hidden sm:inline">Delete</span>
                                             </button>
                                         </div>
                                     </div>
@@ -429,25 +542,6 @@ export default function BookList() {
                         -webkit-line-clamp: 2;
                         -webkit-box-orient: vertical;
                         overflow: hidden;
-                    }
-
-                    select {
-                        background-image: none;
-                    }
-
-                    select:focus + span svg {
-                        transform: rotate(180deg);
-                        transition: transform 0.2s ease;
-                    }
-
-                    option {
-                        padding: 8px;
-                        background: white;
-                        color: #1f2937;
-                    }
-
-                    option:hover {
-                        background: #f3f4f6;
                     }
                 `}</style>
             </div>

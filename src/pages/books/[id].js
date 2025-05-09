@@ -38,17 +38,22 @@ export default function EditBook() {
         }
     }, [id]);
 
-    const handleSubmit = async (bookData) => {
+    const handleSubmit = async (formData) => {
+        console.log('Submitting FormData:', Array.from(formData.entries()));
         try {
             setIsSaving(true);
             const res = await fetch(`/api/books/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(bookData),
+                body: formData,
             });
+
+            console.log('PUT response status:', res.status);
             if (!res.ok) {
-                throw new Error('Failed to update book');
+                const errorData = await res.json();
+                console.error('API error response:', errorData);
+                throw new Error(errorData.error || 'Failed to update book');
             }
+
             window.dispatchEvent(
                 new CustomEvent('showNotification', {
                     detail: {
@@ -59,10 +64,11 @@ export default function EditBook() {
             );
             router.push('/books');
         } catch (error) {
+            console.error('Error updating book:', error);
             window.dispatchEvent(
                 new CustomEvent('showNotification', {
                     detail: {
-                        message: 'Gagal menyimpan buku',
+                        message: error.message,
                         type: 'error',
                     },
                 })
@@ -79,9 +85,14 @@ export default function EditBook() {
             const res = await fetch(`/api/books/${id}`, {
                 method: 'DELETE',
             });
+
+            console.log('DELETE response status:', res.status);
             if (!res.ok) {
-                throw new Error('Failed to delete book');
+                const errorData = await res.json();
+                console.error('API error response:', errorData);
+                throw new Error(errorData.error || 'Failed to delete book');
             }
+
             window.dispatchEvent(
                 new CustomEvent('showNotification', {
                     detail: {
@@ -92,10 +103,11 @@ export default function EditBook() {
             );
             router.push('/books');
         } catch (error) {
+            console.error('Error deleting book:', error);
             window.dispatchEvent(
                 new CustomEvent('showNotification', {
                     detail: {
-                        message: 'Gagal menghapus buku',
+                        message: error.message,
                         type: 'error',
                     },
                 })
@@ -164,11 +176,14 @@ export default function EditBook() {
     return (
         <>
             <Navbar />
-            <BookForm
-                initialData={book}
-                onSubmit={handleSubmit}
-                onDelete={handleDelete}
-            />
+            <div className="max-w-7xl mx-auto px-4 py-10 min-h-[80vh]">
+                <h1 className="text-4xl font-extrabold text-gray-900 mb-8">Edit Buku</h1>
+                <BookForm
+                    initialData={book}
+                    onSubmit={handleSubmit}
+                    onDelete={handleDelete}
+                />
+            </div>
             <Footer />
         </>
     );

@@ -61,34 +61,45 @@ export default function Home() {
                 </section>
 
                 {/* Buku Teratas */}
-                <section className="max-w-7xl mx-auto px-6 py-12">
+                <section className="max-w-4xl mx-auto px-6 py-12">
                     <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
                         Buku Teratas
                     </h2>
                     {isClient && books.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
                             {books.map((book, index) => (
                                 <Link
                                     key={book.id}
                                     href={`/books/${book.id}/views`}
-                                    className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-fadeIn"
+                                    className="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transform transition-all duration-300 hover:-translate-y-1 fade-in"
                                     style={{ animationDelay: `${index * 100}ms` }}
                                 >
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <BookText className="text-blue-600" size={32} />
-                                        <h3 className="text-xl font-semibold text-gray-900 line-clamp-2">
-                                            {book.title}
-                                        </h3>
+                                    <div className="aspect-square bg-gray-100 flex items-center justify-center text-blue-600 text-6xl">
+                                        {book.image ? (
+                                            <img
+                                                src={book.image}
+                                                alt={book.title}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <BookText size={48} />
+                                        )}
                                     </div>
-                                    <p className="text-gray-600 text-sm line-clamp-1 italic">
-                                        oleh {book.author}
-                                    </p>
-                                    <p className="text-gray-500 text-sm mt-2 line-clamp-2">
-                                        {book.desc || 'Tidak ada deskripsi tersedia.'}
-                                    </p>
+                                    <div className="p-5 text-center">
+                                        <h2 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
+                                            {book.title}
+                                        </h2>
+                                        <p className="text-sm text-gray-600 italic line-clamp-1">
+                                            oleh {book.author}
+                                        </p>
+                                        {/* <p className="text-sm text-gray-500 mt-full line-clamp-2">
+                                            {book.desc}
+                                        </p> */}
+                                    </div>
                                 </Link>
                             ))}
                         </div>
+
                     ) : (
                         <div className="flex justify-center items-center py-12">
                             <Loader message="Memuat buku..." size="large" color="blue" />
