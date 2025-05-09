@@ -30,6 +30,10 @@ function levenshteinDistance(a, b) {
     return matrix[b.length][a.length];
 }
 
+function isRepetitiveWord(word) {
+    return /^(.)\1*$/.test(word);
+}
+
 export default function BookList() {
     const [books, setBooks] = useState([]);
     const [visible, setVisible] = useState(8);
@@ -67,15 +71,24 @@ export default function BookList() {
             result = result.filter((b) => b.category === selectedCategory);
         }
         if (searchQuery) {
-            const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(word => word.length >= 2);
+            const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(word => word.length >= 3);
             if (queryWords.length > 0) {
+                const allRepetitive = queryWords.every(isRepetitiveWord);
+                if (allRepetitive) {
+                    return result.filter((b) => {
+                        const title = (b.title || '').toLowerCase();
+                        const author = (b.author || '').toLowerCase();
+                        return queryWords.some((queryWord) => title.includes(queryWord) || author.includes(queryWord));
+                    });
+                }
+
                 result = result.filter((b) => {
                     const title = (b.title || '').toLowerCase();
                     const author = (b.author || '').toLowerCase();
                     const titleWords = title.split(/\s+/);
                     const authorWords = author.split(/\s+/);
 
-                    return queryWords.every((queryWord) => {
+                    return queryWords.every((queryWord) => {                    
                         const isSubstring = 
                             title.includes(queryWord) ||
                             author.includes(queryWord) ||
@@ -83,10 +96,27 @@ export default function BookList() {
                             authorWords.some(word => word.startsWith(queryWord));
                         if (isSubstring) return true;
 
-                        return (
+                        const isWordMatch = 
                             titleWords.some((titleWord) => levenshteinDistance(queryWord, titleWord) <= 2) ||
-                            authorWords.some((authorWord) => levenshteinDistance(queryWord, authorWord) <= 2)
-                        );
+                            authorWords.some((authorWord) => levenshteinDistance(queryWord, authorWord) <= 2);
+                        if (isWordMatch) return true;
+
+                        const checkSubstrings = (textWords) => {
+                            for (const word of textWords) {
+                                const maxLen = Math.min(word.length, queryWord.length + 2);
+                                for (let len = queryWord.length - 1; len <= maxLen; len++) {
+                                    if (len <= word.length) {
+                                        const substr = word.slice(0, len);
+                                        if (levenshteinDistance(queryWord, substr) <= 1) {
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                            return false;
+                        };
+
+                        return checkSubstrings(titleWords) || checkSubstrings(authorWords);
                     });
                 });
             }
