@@ -67,16 +67,27 @@ export default function BookList() {
             result = result.filter((b) => b.category === selectedCategory);
         }
         if (searchQuery) {
-            const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(word => word.length >= 3);
+            const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(word => word.length >= 2);
             if (queryWords.length > 0) {
                 result = result.filter((b) => {
-                    const titleWords = (b.title || '').toLowerCase().split(/\s+/);
-                    const authorWords = (b.author || '').toLowerCase().split(/\s+/);
+                    const title = (b.title || '').toLowerCase();
+                    const author = (b.author || '').toLowerCase();
+                    const titleWords = title.split(/\s+/);
+                    const authorWords = author.split(/\s+/);
 
-                    return queryWords.every((queryWord) =>
-                        titleWords.some((titleWord) => levenshteinDistance(queryWord, titleWord) <= 2) ||
-                        authorWords.some((authorWord) => levenshteinDistance(queryWord, authorWord) <= 2)
-                    );
+                    return queryWords.every((queryWord) => {
+                        const isSubstring = 
+                            title.includes(queryWord) ||
+                            author.includes(queryWord) ||
+                            titleWords.some(word => word.startsWith(queryWord)) ||
+                            authorWords.some(word => word.startsWith(queryWord));
+                        if (isSubstring) return true;
+
+                        return (
+                            titleWords.some((titleWord) => levenshteinDistance(queryWord, titleWord) <= 2) ||
+                            authorWords.some((authorWord) => levenshteinDistance(queryWord, authorWord) <= 2)
+                        );
+                    });
                 });
             }
         }
