@@ -127,7 +127,6 @@ export default function BookList() {
         return result;
     }, [books, selectedCategory, searchQuery]);
 
-    // Tutup dropdown saat klik di luar
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (
@@ -144,7 +143,6 @@ export default function BookList() {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    // Navigasi keyboard untuk dropdown
     useEffect(() => {
         const handleKeyDown = (event) => {
             if (!dropdownOpen) return;
