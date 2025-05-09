@@ -36,7 +36,7 @@ export default function Home() {
                 <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20 text-center">
                     <div className="max-w-7xl mx-auto px-6">
                         <h1
-                            className={`text-5xl font-extrabold mb-4 transition-all duration-700 ease-out transform ${show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+                            className={`text-5xl leading-[1.2] font-extrabold mb-4 transition-all duration-700 ease-out transform ${show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
                                 }`}
                         >
                             Katalog Buku SESPlus

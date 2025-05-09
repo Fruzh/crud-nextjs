@@ -461,10 +461,10 @@ export default function BookList() {
                                             className="w-full aspect-[7/8] object-cover rounded-t-xl mb-4 shadow"
                                         />
 
-                                        <h2 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
+                                        <h2 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2 px-3">
                                             {b.title}
                                         </h2>
-                                        <p className="text-sm text-gray-600 mb-4 italic line-clamp-1">
+                                        <p className="text-sm text-gray-600 mb-4 italic line-clamp-1 px-3">
                                             oleh {b.author}
                                         </p>
                                         <div className="flex gap-3 mt-auto">
