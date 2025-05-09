@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
-import { BookText, Pencil, Trash, Plus } from 'lucide-react';
+import { BookText, Pencil, Trash, Plus, Search } from 'lucide-react';
 import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
 import Loader from '@/components/loader';
@@ -7,6 +7,28 @@ import Navbar from '@/components/navbar';
 import Footer from '@/components/footer';
 import Modal from '@/components/modal';
 import { getCategoryStyles } from '@/utils/categoryStyles';
+
+function levenshteinDistance(a, b) {
+    const matrix = Array(b.length + 1)
+        .fill(null)
+        .map(() => Array(a.length + 1).fill(null));
+
+    for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
+    for (let j = 0; j <= b.length; j++) matrix[j][0] = j;
+
+    for (let j = 1; j <= b.length; j++) {
+        for (let i = 1; i <= a.length; i++) {
+            const indicator = a[i - 1] === b[j - 1] ? 0 : 1;
+            matrix[j][i] = Math.min(
+                matrix[j][i - 1] + 1,
+                matrix[j - 1][i] + 1,
+                matrix[j - 1][i - 1] + indicator
+            );
+        }
+    }
+
+    return matrix[b.length][a.length];
+}
 
 export default function BookList() {
     const [books, setBooks] = useState([]);
@@ -16,6 +38,7 @@ export default function BookList() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState('Semua Kategori');
+    const [searchQuery, setSearchQuery] = useState('');
     const { ref: loaderRef, inView: loaderInView } = useInView({ threshold: 1 });
     const cardRefs = useRef([]);
 
@@ -39,10 +62,26 @@ export default function BookList() {
     ];
 
     const filteredBooks = useMemo(() => {
-        return selectedCategory === 'Semua Kategori'
-            ? books
-            : books.filter((b) => b.category === selectedCategory);
-    }, [books, selectedCategory]);
+        let result = books;
+        if (selectedCategory !== 'Semua Kategori') {
+            result = result.filter((b) => b.category === selectedCategory);
+        }
+        if (searchQuery) {
+            const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(word => word.length >= 3);
+            if (queryWords.length > 0) {
+                result = result.filter((b) => {
+                    const titleWords = (b.title || '').toLowerCase().split(/\s+/);
+                    const authorWords = (b.author || '').toLowerCase().split(/\s+/);
+
+                    return queryWords.every((queryWord) =>
+                        titleWords.some((titleWord) => levenshteinDistance(queryWord, titleWord) <= 2) ||
+                        authorWords.some((authorWord) => levenshteinDistance(queryWord, authorWord) <= 2)
+                    );
+                });
+            }
+        }
+        return result;
+    }, [books, selectedCategory, searchQuery]);
 
     useEffect(() => {
         fetch('/api/books')
@@ -137,6 +176,11 @@ export default function BookList() {
         setBookIdToDelete(null);
     };
 
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+        setVisible(8);
+    };
+
     if (error) {
         return (
             <>
@@ -172,52 +216,70 @@ export default function BookList() {
         <>
             <Navbar />
             <div className="max-w-7xl mx-auto px-4 py-10 min-h-[80vh]">
-                <div className="flex justify-between items-center mb-8">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                     <h1 className="text-4xl font-extrabold text-gray-900">Koleksi Buku</h1>
-                    <div className="relative w-48">
-                        <select
-                            value={selectedCategory}
-                            onChange={(e) => {
-                                setSelectedCategory(e.target.value);
-                                setVisible(8);
-                            }}
-                            className="block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white appearance-none transition-all duration-200 hover:bg-gray-50 focus:bg-gray-50 pr-10"
-                            aria-label="Filter buku berdasarkan kategori"
-                        >
-                            {categories.map((cat) => (
-                                <option key={cat} value={cat}>
-                                    {cat}
-                                </option>
-                            ))}
-                        </select>
-                        <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                            <svg
-                                className="w-4 h-4 text-gray-500"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
+                    <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                        <div className="relative w-full sm:w-64">
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                                placeholder="Cari judul atau penulis..."
+                                className="block w-full px-3 py-2.5 pl-10 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white transition-all duration-200 hover:bg-gray-50 focus:bg-gray-50"
+                                aria-label="Cari buku berdasarkan judul atau penulis"
+                            />
+                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                <Search size={20} className="text-gray-500" />
+                            </span>
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <div className="relative w-full sm:w-48">
+                                <select
+                                    value={selectedCategory}
+                                    onChange={(e) => {
+                                        setSelectedCategory(e.target.value);
+                                        setVisible(8);
+                                    }}
+                                    className="block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white appearance-none transition-all duration-200 hover:bg-gray-50 focus:bg-gray-50 pr-10"
+                                    aria-label="Filter buku berdasarkan kategori"
+                                >
+                                    {categories.map((cat) => (
+                                        <option key={cat} value={cat}>
+                                            {cat}
+                                        </option>
+                                    ))}
+                                </select>
+                                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                    <svg
+                                        className="w-4 h-4 text-gray-500"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M19 9l-7 7-7-7"
+                                        />
+                                    </svg>
+                                </span>
+                            </div>
+                            <Link
+                                href="/books/add"
+                                className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 inline-flex items-center gap-2 transition-all duration-200"
+                                aria-label="Tambah buku baru"
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M19 9l-7 7-7-7"
-                                />
-                            </svg>
-                        </span>
+                                <Plus size={20} /> Tambah Buku
+                            </Link>
+                        </div>
                     </div>
-                    <Link
-                        href="/books/add"
-                        className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 inline-flex items-center gap-2 transition-all duration-200"
-                    >
-                        <Plus size={20} /> Tambah Buku
-                    </Link>
                 </div>
 
                 {filteredBooks.length === 0 ? (
                     <p className="text-center text-gray-500 text-lg min-h-screen flex items-center justify-center">
-                        Tidak ada buku tersedia untuk kategori ini.
+                        Tidak ada buku tersedia untuk kriteria ini.
                     </p>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
