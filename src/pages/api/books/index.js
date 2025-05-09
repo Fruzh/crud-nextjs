@@ -6,12 +6,13 @@ export default function handler(req, res) {
     if (req.method === 'GET') {
         res.status(200).json(books);
     } else if (req.method === 'POST') {
-        const { title, author, desc, content } = req.body;
+        const { title, author, category, desc, content } = req.body;
 
         const newBook = {
             id: Date.now(),
             title,
             author,
+            category,
             desc,
             content,
         };

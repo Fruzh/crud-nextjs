@@ -15,8 +15,8 @@ export default function handler(req, res) {
     if (req.method === 'PUT') {
         if (bookIndex === -1) return res.status(404).json({ message: 'Book not found' });
 
-        const { title, author, desc, content } = req.body;
-        books[bookIndex] = { ...books[bookIndex], title, author, desc, content };
+        const { title, author, category, desc, content } = req.body;
+        books[bookIndex] = { ...books[bookIndex], title, author, category, desc, content };
 
         const filePath = path.join(process.cwd(), 'data.js');
         const updatedData = `let books = ${JSON.stringify(books, null, 2)};\n\nexport { books };`;

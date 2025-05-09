@@ -21,7 +21,7 @@ export default function Footer() {
                         SESPlus
                     </Link>
                     <p className="mt-4 text-gray-300 text-sm">
-                        Katalog Buku untuk Kelas Industri SIJA. Kelola dan jelajahi koleksi buku dengan mudah dan cepat.
+                        Katalog Buku. Kelola dan jelajahi koleksi buku dengan mudah dan cepat.
                     </p>
                 </div>
 
@@ -36,6 +36,15 @@ export default function Footer() {
                                 className={`transition hover:text-blue-400 ${pathname === "/" ? "text-blue-500 font-semibold" : ""}`}
                             >
                                 Beranda
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href="/about"
+                                onClick={(e) => handleClick(e, "/about")}
+                                className={`transition hover:text-blue-400 ${pathname === "/about" ? "text-blue-500 font-semibold" : ""}`}
+                            >
+                                Tentang Kami
                             </Link>
                         </li>
                         <li>
@@ -78,7 +87,7 @@ export default function Footer() {
             </div>
             <div className="mt-8 border-t border-gray-700 pt-6 text-center">
                 <p className="text-sm text-gray-400">
-                    © {new Date().getFullYear()} Katalog Buku. Dibuat untuk Kelas Industri SIJA.
+                    © {new Date().getFullYear()} Katalog Buku.
                 </p>
             </div>
         </footer>

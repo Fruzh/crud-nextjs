@@ -1,6 +1,7 @@
 let books = [
   {
     "id": 1,
+    "category": "Bisnis",
     "title": "The Wealth of Nations",
     "author": "Adam Smith",
     "desc": "Karya klasik yang menjadi dasar ekonomi modern, membahas pasar bebas, pembagian kerja, dan prinsip ekonomi liberal.",
@@ -8,178 +9,235 @@ let books = [
   },
   {
     "id": 2,
-    "title": "Security Analysis",
-    "author": "Benjamin Graham & David Dodd",
-    "desc": "Buku teknis yang menjadi panduan utama untuk analisis sekuritas dan investasi nilai, sering digunakan oleh investor profesional.",
-    "content": "Buku ini adalah panduan komprehensif untuk mengevaluasi saham dan obligasi melalui analisis fundamental. Graham dan Dodd mengajarkan cara membaca laporan keuangan, menilai nilai intrinsik perusahaan, dan mengidentifikasi peluang investasi yang undervalued. Buku ini juga menekankan pentingnya pendekatan konservatif dalam investasi, dengan fokus pada data daripada spekulasi. Edisi terbaru tetap relevan bagi investor yang ingin mendalami analisis sekuritas secara mendalam."
+    "category": "Bisnis",
+    "title": "The Intelligent Investor",
+    "author": "Benjamin Graham",
+    "desc": "Panduan investasi klasik yang mengajarkan strategi investasi nilai untuk meminimalkan risiko dan memaksimalkan keuntungan.",
+    "content": "Buku ini memperkenalkan konsep 'value investing', di mana investor membeli saham yang undervalued berdasarkan analisis fundamental. Graham menekankan pentingnya margin of safety, disiplin emosional, dan fokus pada investasi jangka panjang. Buku ini juga membahas perbedaan antara investor dan spekulan, serta memberikan panduan praktis untuk analisis pasar. Diperbarui dengan komentar modern oleh Jason Zweig, buku ini tetap relevan untuk investor pemula maupun berpengalaman."
   },
   {
     "id": 3,
-    "title": "The Intelligent Investor",
-    "author": "Benjamin Graham",
-    "desc": "Dianggap sebagai 'Alkitab' investasi, buku ini memperkenalkan konsep investasi nilai (value investing) yang berfokus pada analisis fundamental dan pengendalian emosi dalam berinvestasi.",
-    "content": "Graham menguraikan prinsip investasi jangka panjang, termasuk konsep 'margin of safety' untuk mengurangi risiko dengan membeli saham di bawah nilai intrinsiknya. Buku ini juga membahas pentingnya disiplin emosional untuk menghindari keputusan impulsif akibat fluktuasi pasar. Dengan analogi seperti 'Mr. Market,' Graham mengajarkan investor untuk fokus pada nilai bisnis daripada harga saham. Buku ini wajib dibaca bagi siapa saja yang ingin berinvestasi dengan pendekatan rasional."
+    "category": "Fiksi",
+    "title": "To Kill a Mockingbird",
+    "author": "Harper Lee",
+    "desc": "Novel klasik tentang keadilan, moralitas, dan rasisme di Amerika Selatan pada era 1930-an.",
+    "content": "Buku ini mengikuti Scout Finch, seorang gadis muda, dan ayahnya, Atticus Finch, seorang pengacara yang membela seorang pria kulit hitam yang dituduh secara salah. Melalui perspektif anak-anak, Lee mengeksplorasi tema keadilan, empati, dan keberanian moral di tengah prasangka sosial. Novel ini memenangkan Pulitzer Prize dan menjadi bacaan wajib untuk memahami isu-isu sosial dan kemanusiaan."
+  },
+  {
+    "id": 4,
+    "category": "Fiksi",
+    "title": "1984",
+    "author": "George Orwell",
+    "desc": "Novel dystopia tentang totalitarianisme, pengawasan, dan manipulasi kebenaran.",
+    "content": "Buku ini menggambarkan dunia di mana Partai mengendalikan setiap aspek kehidupan, dipimpin oleh Big Brother. Winston Smith, protagonis, berjuang melawan propaganda dan kontrol pikiran, tetapi menghadapi pengkhianatan dan penindasan. Orwell mengeksplorasi bahaya otoritarianisme, kehilangan kebebasan individu, dan distorsi kebenaran, membuat novel ini relevan untuk diskusi politik modern."
   },
   {
     "id": 5,
-    "title": "A Random Walk Down Wall Street",
-    "author": "Burton G. Malkiel",
-    "desc": "Buku klasik yang memperdebatkan efisiensi pasar dan merekomendasikan strategi investasi pasif, seperti indeks dana.",
-    "content": "Malkiel memperkenalkan teori 'random walk,' yang menyatakan bahwa pergerakan harga saham tidak dapat diprediksi secara konsisten karena pasar efisien. Ia menganjurkan investasi dalam dana indeks berbiaya rendah untuk diversifikasi dan hasil jangka panjang yang lebih baik daripada mencoba 'mengalahkan pasar.' Buku ini juga mengkritik strategi investasi aktif seperti stock picking dan market timing, dengan data historis yang mendukung pendekatan pasif."
+    "category": "Non-Fiksi",
+    "title": "Sapiens: A Brief History of Humankind",
+    "author": "Yuval Noah Harari",
+    "desc": "Penjelasan menarik tentang sejarah manusia dari Zaman Batu hingga era modern.",
+    "content": "Harari menelusuri evolusi *Homo sapiens* melalui revolusi kognitif, pertanian, dan ilmiah. Buku ini membahas bagaimana mitos bersama, seperti uang dan agama, membentuk masyarakat, serta dampaknya pada budaya, politik, dan teknologi. Dengan gaya naratif yang mudah dipahami, buku ini menawarkan wawasan tentang bagaimana manusia mendominasi planet dan tantangan masa depan."
   },
   {
     "id": 6,
-    "title": "Principles: Life and Work",
-    "author": "Ray Dalio",
-    "desc": "Buku ini berbagi prinsip-prinsip yang digunakan oleh Ray Dalio, pendiri hedge fund Bridgewater Associates, untuk sukses dalam keuangan, investasi, dan kehidupan.",
-    "content": "Dalio membagikan pendekatan sistematisnya dalam pengambilan keputusan, yang didasarkan pada prinsip-prinsip yang teruji. Ia menjelaskan cara membangun portofolio investasi yang tahan terhadap berbagai kondisi pasar melalui diversifikasi dan manajemen risiko. Konsep seperti 'radical transparency' dan 'idea meritocracy' juga dibahas sebagai kunci sukses organisasi. Buku ini cocok untuk investor, pemimpin bisnis, atau siapa saja yang ingin mengembangkan pendekatan berbasis prinsip dalam hidup."
+    "category": "Non-Fiksi",
+    "title": "The Immortal Life of Henrietta Lacks",
+    "author": "Rebecca Skloot",
+    "desc": "Kisah nyata tentang sel HeLa dan dampaknya pada sains serta etika medis.",
+    "content": "Buku ini menceritakan kehidupan Henrietta Lacks, seorang wanita kulit hitam yang selnya diambil tanpa izin pada 1950-an dan menjadi dasar penelitian medis besar. Skloot mengeksplorasi kontribusi sel HeLa pada vaksin, pengobatan kanker, dan lainnya, sambil membahas isu etika, rasisme, dan hak pasien. Buku ini menggabungkan sains, sejarah, dan narasi pribadi dengan apik."
   },
   {
     "id": 7,
-    "title": "Capital in the Twenty-First Century",
-    "author": "Thomas Piketty",
-    "desc": "Buku ini menganalisis ketimpangan ekonomi sepanjang sejarah dan berargumen bahwa kapitalisme cenderung memperburuk ketimpangan kecuali ada intervensi.",
-    "content": "Dengan data historis yang luas, Piketty menunjukkan bahwa tingkat pengembalian modal (r) secara konsisten melebihi pertumbuhan ekonomi (g), menyebabkan konsentrasi kekayaan di tangan segelintir orang. Ia mengusulkan solusi seperti pajak progresif global untuk mengatasi ketimpangan. Buku ini memicu debat luas tentang kapitalisme dan kebijakan ekonomi, menjadikannya penting untuk memahami dinamika ekonomi makro dan distribusi kekayaan."
+    "category": "Fantasi",
+    "title": "The Hobbit",
+    "author": "J.R.R. Tolkien",
+    "desc": "Petualangan epik Bilbo Baggins di dunia fantasi Middle-earth.",
+    "content": "Buku ini mengikuti Bilbo, seorang hobbit, yang bergabung dengan penyihir Gandalf dan sekelompok kurcaci untuk merebut harta dari naga Smaug. Tolkien menciptakan dunia kaya dengan mitologi, bahasa, dan karakter yang hidup. Novel ini mengeksplorasi tema keberanian, persahabatan, dan penemuan diri, menjadi pengantar ke *The Lord of the Rings*."
   },
   {
     "id": 8,
-    "title": "Rich Dad Poor Dad",
-    "author": "Robert Kiyosaki & Sharon Lechter",
-    "desc": "Buku pengelolaan keuangan pribadi yang mengajarkan literasi finansial dan pola pikir kaya melalui cerita sederhana.",
-    "content": "Melalui perbandingan antara 'ayah kaya' (mentor finansial) dan 'ayah miskin' (ayah biologis), buku ini mengajarkan pentingnya membedakan aset dan liabilitas, berinvestasi untuk pendapatan pasif, dan mengembangkan pendidikan finansial. Kiyosaki menekankan pola pikir kaya, seperti mencari peluang dan mengelola risiko, untuk mencapai kebebasan finansial. Buku ini mudah dipahami dan inspiratif bagi pemula dalam pengelolaan keuangan."
+    "category": "Fantasi",
+    "title": "Harry Potter and the Sorcerer’s Stone",
+    "author": "J.K. Rowling",
+    "desc": "Kisah awal Harry Potter menemukan dunia sihir dan takdirnya sebagai penyihir.",
+    "content": "Harry, seorang anak yatim, mengetahui ia adalah penyihir dan diterima di Hogwarts. Ia berteman dengan Ron dan Hermione, menghadapi tantangan magis, dan mengungkap misteri Batu Bertuah. Rowling membangun dunia sihir yang memikat dengan tema persahabatan, keberanian, dan pertumbuhan. Buku ini memulai seri yang dicintai secara global."
   },
   {
     "id": 9,
-    "title": "Thinking, Fast and Slow",
-    "author": "Daniel Kahneman",
-    "desc": "Buku yang menjelaskan cara kerja pikiran manusia dalam pengambilan keputusan, relevan untuk investasi dan ekonomi perilaku.",
-    "content": "Kahneman, pemenang Nobel Ekonomi, memperkenalkan dua sistem berpikir: Sistem 1 (cepat, intuitif) dan Sistem 2 (lambat, analitis). Buku ini menguraikan bias kognitif seperti overconfidence dan loss aversion yang memengaruhi keputusan finansial. Dengan contoh praktis, Kahneman membantu investor memahami bagaimana emosi dan persepsi dapat mengganggu pengambilan keputusan yang rasional, menjadikan buku ini penting untuk ekonomi perilaku."
+    "category": "Misteri",
+    "title": "The Girl with the Dragon Tattoo",
+    "author": "Stieg Larsson",
+    "desc": "Thriller tentang jurnalis dan hacker yang menyelidiki kasus hilangnya seseorang.",
+    "content": "Mikael Blomkvist, jurnalis, dan Lisbeth Salander, hacker jenius, bekerja sama untuk memecahkan misteri hilangnya Harriet Vanger selama 40 tahun. Larsson menggabungkan intrik keluarga, korupsi, dan aksi dalam narasi yang mendebarkan. Buku ini menonjol karena karakter Salander yang kompleks dan plot yang penuh kejutan."
   },
   {
     "id": 10,
-    "title": "The Millionaire Next Door",
-    "author": "Thomas J. Stanley & William D. Danko",
-    "desc": "Studi tentang kebiasaan orang kaya di Amerika, menyoroti pentingnya hemat dan investasi untuk membangun kekayaan.",
-    "content": "Berdasarkan penelitian ekstensif, buku ini mengungkap bahwa banyak jutawan hidup sederhana, menghindari gaya hidup boros, dan fokus pada akumulasi aset seperti saham dan properti. Stanley dan Danko menekankan pentingnya disiplin finansial, perencanaan jangka panjang, dan hidup di bawah kemampuan untuk mencapai kekayaan. Buku ini memberikan wawasan praktis tentang pola pikir dan kebiasaan orang kaya."
+    "category": "Misteri",
+    "title": "And Then There Were None",
+    "author": "Agatha Christie",
+    "desc": "Novel misteri klasik tentang sepuluh orang yang terjebak di pulau dan mati satu per satu.",
+    "content": "Sepuluh orang asing diundang ke pulau terpencil dan mulai terbunuh sesuai dengan sajak anak-anak. Christie menciptakan ketegangan melalui plot yang cerdas dan karakter yang penuh rahasia. Buku ini adalah salah satu novel misteri terlaris sepanjang masa, terkenal karena twist-nya yang mengejutkan."
   },
   {
     "id": 11,
-    "title": "Your Money or Your Life",
-    "author": "Vicki Robin & Joe Dominguez",
-    "desc": "Panduan untuk mencapai kebebasan finansial melalui pengelolaan keuangan yang sadar dan hidup sederhana.",
-    "content": "Buku ini menawarkan pendekatan sembilan langkah untuk mengelola keuangan, termasuk melacak setiap pengeluaran, mengevaluasi apakah pengeluaran sesuai dengan nilai pribadi, dan mengurangi ketergantungan pada pendapatan aktif. Dengan fokus pada kesederhanaan dan kesadaran, buku ini membantu pembaca merancang kehidupan yang bebas dari tekanan finansial, cocok untuk mereka yang mencari kebebasan finansial."
+    "category": "Romansa",
+    "title": "Pride and Prejudice",
+    "author": "Jane Austen",
+    "desc": "Novel romansa klasik tentang cinta, kelas sosial, dan kesalahpahaman.",
+    "content": "Elizabeth Bennet dan Mr. Darcy menghadapi prasangka dan kebanggaan dalam perjalanan mereka menuju cinta. Austen dengan cerdas menggambarkan dinamika sosial di Inggris abad ke-19, dengan dialog yang tajam dan karakter yang tak terlupakan. Buku ini mengeksplorasi tema cinta, reputasi, dan transformasi pribadi, tetap relevan hingga kini."
   },
   {
     "id": 12,
-    "title": "The Little Book of Common Sense Investing",
-    "author": "John C. Bogle",
-    "desc": "Buku yang mempromosikan investasi indeks berbiaya rendah sebagai cara terbaik untuk membangun kekayaan jangka panjang.",
-    "content": "Bogle, pendiri Vanguard, menjelaskan mengapa dana indeks adalah pilihan terbaik bagi investor rata-rata karena biaya rendah, diversifikasi luas, dan kinerja yang konsisten mengikuti pasar. Buku ini membandingkan investasi aktif dan pasif, dengan data yang menunjukkan bahwa sebagian besar manajer aktif gagal mengalahkan indeks dalam jangka panjang. Ini adalah panduan praktis untuk investor pemula maupun berpengalaman."
+    "category": "Romansa",
+    "title": "The Notebook",
+    "author": "Nicholas Sparks",
+    "desc": "Kisah cinta yang mengharukan antara Noah dan Allie yang terpisah oleh waktu dan keadaan.",
+    "content": "Buku ini menceritakan cinta pertama Noah Calhoun dan Allie Nelson, yang dipisahkan oleh kelas sosial dan perang. Bertahun-tahun kemudian, mereka bertemu kembali, menghadapi pilihan antara cinta dan kewajiban. Sparks menulis dengan emosi yang mendalam, menjadikan novel ini ikon romansa modern."
   },
   {
     "id": 13,
-    "title": "One Up On Wall Street",
-    "author": "Peter Lynch",
-    "desc": "Panduan investasi dari salah satu manajer dana terbaik, mengajarkan cara menemukan peluang investasi di kehidupan sehari-hari.",
-    "content": "Lynch, mantan manajer Fidelity Magellan Fund, mendorong investor untuk memanfaatkan pengetahuan sehari-hari untuk menemukan perusahaan dengan potensi pertumbuhan, seperti merek yang sering mereka gunakan. Ia menjelaskan cara mengevaluasi saham pertumbuhan, mengelola portofolio, dan menghindari jebakan emosional. Buku ini penuh dengan nasihat praktis dan kisah sukses Lynch dalam investasi."
+    "category": "Sains",
+    "title": "A Brief History of Time",
+    "author": "Stephen Hawking",
+    "desc": "Penjelasan tentang alam semesta, dari Big Bang hingga lubang hitam, untuk pembaca awam.",
+    "content": "Hawking menjelaskan konsep kompleks seperti relativitas, lubang hitam, dan sifat waktu dengan bahasa yang mudah dipahami. Buku ini membahas asal-usul alam semesta, kemungkinan perjalanan waktu, dan pencarian teori unifikasi. Buku ini adalah pengantar sains kosmologi yang populer dan menginspirasi."
   },
   {
     "id": 14,
-    "title": "The Richest Man in Babylon",
-    "author": "George S. Clason",
-    "desc": "Buku klasik tentang pengelolaan keuangan pribadi melalui cerita-cerita dari Babilonia kuno.",
-    "content": "Dengan perumpamaan yang mudah dipahami, buku ini mengajarkan prinsip keuangan abadi seperti menyisihkan 10% dari pendapatan untuk investasi, menghindari utang konsumtif, dan mencari nasihat dari ahli. Cerita seperti 'Tujuh Obat untuk Dompet Kosong' memberikan pelajaran praktis tentang cara membangun kekayaan secara bertahap, cocok untuk semua kalangan."
+    "category": "Sains",
+    "title": "The Selfish Gene",
+    "author": "Richard Dawkins",
+    "desc": "Penjelasan tentang evolusi dari perspektif gen, memperkenalkan konsep 'gen egois'.",
+    "content": "Dawkins berargumen bahwa gen adalah penggerak utama evolusi, bertahan melalui seleksi alam. Buku ini memperkenalkan konsep meme dan menjelaskan perilaku altruistik dari sudut pandang genetik. Dengan gaya yang jelas dan provokatif, buku ini mengubah cara kita memahami biologi evolusioner."
   },
   {
     "id": 15,
-    "title": "The Psychology of Money",
-    "author": "Morgan Housel",
-    "desc": "Buku yang mengeksplorasi hubungan emosional dengan uang dan bagaimana perilaku memengaruhi keputusan finansial.",
-    "content": "Housel menggunakan cerita pendek untuk mengilustrasikan bahwa kesuksesan finansial lebih bergantung pada perilaku daripada kecerdasan teknis. Ia menyoroti pentingnya kesabaran, konsistensi, dan pemahaman bahwa kekayaan sering kali dibangun melalui waktu, bukan keberuntungan atau risiko besar. Buku ini menawarkan wawasan psikologis yang relevan untuk investor dan siapa saja yang ingin mengelola keuangan dengan bijak."
+    "category": "Sejarah",
+    "title": "Guns, Germs, and Steel",
+    "author": "Jared Diamond",
+    "desc": "Analisis tentang mengapa beberapa peradaban mendominasi dunia berdasarkan faktor geografis dan lingkungan.",
+    "content": "Diamond menjelaskan bagaimana geografi, domestikasi tanaman/hewan, dan penyakit membentuk sejarah manusia. Buku ini menelusuri perkembangan masyarakat dari Zaman Batu hingga modern, menjelaskan ketimpangan global. Dengan pendekatan interdisipliner, buku ini memenangkan Pulitzer Prize dan relevan untuk studi sejarah global."
   },
   {
     "id": 16,
-    "title": "Common Stocks and Uncommon Profits",
-    "author": "Philip Fisher",
-    "desc": "Buku klasik tentang investasi saham yang berfokus pada analisis kualitatif perusahaan.",
-    "content": "Fisher mengajarkan cara mengevaluasi perusahaan berdasarkan manajemen, inovasi, dan potensi pertumbuhan jangka panjang, melengkapi pendekatan kuantitatif Graham."
+    "category": "Sejarah",
+    "title": "The History of the Ancient World",
+    "author": "Susan Wise Bauer",
+    "desc": "Narasi sejarah dunia kuno dari Mesopotamia hingga Kekaisaran Romawi.",
+    "content": "Bauer menceritakan sejarah peradaban kuno dengan gaya naratif yang menarik, mencakup Mesopotamia, Mesir, Tiongkok, India, Yunani, dan Romawi. Buku ini menghubungkan peristiwa global dan menyoroti perkembangan budaya, politik, dan militer. Cocok untuk pembaca yang ingin memahami akar sejarah manusia secara menyeluruh."
   },
   {
     "id": 17,
-    "title": "The Essays of Warren Buffett",
-    "author": "Warren Buffett, disusun oleh Lawrence A. Cunningham",
-    "desc": "Kumpulan surat Buffett kepada pemegang saham Berkshire Hathaway, berisi wawasan tentang investasi dan bisnis.",
-    "content": "Buku ini merangkum filosofi investasi Buffett, termasuk pentingnya membeli bisnis berkualitas tinggi dengan harga wajar dan memegangnya untuk jangka panjang."
+    "category": "Biografi",
+    "title": "Steve Jobs",
+    "author": "Walter Isaacson",
+    "desc": "Biografi mendalam tentang pendiri Apple dan visinya yang mengubah teknologi.",
+    "content": "Isaacson menceritakan kehidupan Steve Jobs, dari masa kecil hingga kesuksesan Apple dan Pixar. Buku ini mengungkap sisi jenius, obsesif, dan kontroversial Jobs, berdasarkan wawancara eksklusif. Buku ini mengeksplorasi inovasi, kepemimpinan, dan dampak Jobs pada teknologi dan budaya pop."
   },
   {
     "id": 18,
-    "title": "The Snowball: Warren Buffett and the Business of Life",
-    "author": "Alice Schroeder",
-    "desc": "Biografi Warren Buffett yang menjelaskan perjalanan hidup dan strategi investasinya.",
-    "content": "Buku ini menggambarkan bagaimana Buffett membangun kekayaan melalui investasi nilai, dengan cerita tentang kedisiplinan, kesabaran, dan fokus pada nilai jangka panjang."
+    "category": "Biografi",
+    "title": "The Diary of a Young Girl",
+    "author": "Anne Frank",
+    "desc": "Catatan harian Anne Frank tentang kehidupan bersembunyi selama Holocaust.",
+    "content": "Anne Frank, seorang gadis Yahudi, menulis tentang kehidupannya di loteng tersembunyi di Amsterdam selama pendudukan Nazi. Buku ini menggambarkan ketakutan, harapan, dan perkembangan pribadinya di tengah perang. Sebagai dokumen sejarah, buku ini memberikan wawasan emosional tentang Holocaust."
   },
   {
     "id": 19,
-    "title": "Liar's Poker",
-    "author": "Michael Lewis",
-    "desc": "Cerita tentang dunia keuangan Wall Street pada 1980-an, memberikan wawasan tentang budaya dan risiko di industri ini.",
-    "content": "Buku ini menceritakan pengalaman Lewis sebagai pedagang obligasi, menyoroti sifat spekulatif pasar keuangan dan pelajaran tentang risiko."
+    "category": "Teknologi",
+    "title": "The Innovators",
+    "author": "Walter Isaacson",
+    "desc": "Sejarah inovasi teknologi dari komputer hingga internet.",
+    "content": "Isaacson menceritakan kisah para pelopor teknologi seperti Ada Lovelace, Alan Turing, dan Tim Berners-Lee. Buku ini menelusuri perkembangan komputer, perangkat lunak, dan internet, menyoroti kolaborasi dan kreativitas. Buku ini menawarkan wawasan tentang bagaimana revolusi digital membentuk dunia modern."
   },
   {
     "id": 20,
-    "title": "The Big Short",
-    "author": "Michael Lewis",
-    "desc": "Buku yang menceritakan kisah investor yang memprediksi krisis keuangan 2008 dan mendapat keuntungan dari gelembung perumahan.",
-    "content": "Lewis menjelaskan bagaimana beberapa investor mengidentifikasi kelemahan di pasar hipotek dan menggunakan derivatif untuk bertaruh melawan pasar, dengan pelajaran tentang risiko sistemik."
+    "category": "Teknologi",
+    "title": "Hacking: The Art of Exploitation",
+    "author": "Jon Erickson",
+    "desc": "Panduan teknis tentang keamanan siber dan teknik hacking.",
+    "content": "Buku ini memperkenalkan dasar-dasar hacking, termasuk pemrograman, analisis jaringan, dan eksploitasi kerentanan. Erickson menjelaskan konsep seperti buffer overflow dan kriptografi dengan contoh praktis. Ditujukan untuk profesional keamanan siber, buku ini membantu memahami cara melindungi sistem dari serangan."
   },
   {
     "id": 21,
-    "title": "Barbarians at the Gate",
-    "author": "Bryan Burrough & John Helyar",
-    "desc": "Kisah nyata tentang leveraged buyout RJR Nabisco, menggambarkan dunia keuangan korporat dan private equity.",
-    "content": "Buku ini menceritakan pertarungan untuk mengakuisisi RJR Nabisco, menyoroti strategi keuangan, negosiasi, dan dinamika kekuasaan di dunia bisnis."
+    "category": "Filsafat",
+    "title": "Meditations",
+    "author": "Marcus Aurelius",
+    "desc": "Catatan pribadi kaisar Romawi tentang prinsip Stoisisme dan kehidupan bermakna.",
+    "content": "Buku ini berisi refleksi Marcus Aurelius tentang kebajikan, ketahanan, dan penerimaan nasib. Ditulis sebagai jurnal pribadi, buku ini menawarkan panduan praktis untuk hidup dengan integritas dan ketenangan di tengah tantangan. Prinsip Stoisisme dalam buku ini relevan untuk pengembangan diri modern."
   },
   {
     "id": 22,
-    "title": "Freakonomics",
-    "author": "Steven D. Levitt & Stephen J. Dubner",
-    "desc": "Buku yang menggunakan prinsip ekonomi untuk menjelaskan fenomena sosial yang tidak biasa.",
-    "content": "Levitt dan Dubner menganalisis topik seperti kejahatan dan pendidikan dengan pendekatan ekonomi, menunjukkan bagaimana insentif memengaruhi perilaku manusia."
+    "category": "Filsafat",
+    "title": "Thus Spoke Zarathustra",
+    "author": "Friedrich Nietzsche",
+    "desc": "Karya filosofis tentang makna hidup, kehendak kuasa, dan kematian Tuhan.",
+    "content": "Melalui tokoh Zarathustra, Nietzsche mengeksplorasi ide-ide seperti übermensch (manusia super), kehendak kuasa, dan nihilisme. Buku ini ditulis dengan gaya puitis dan penuh simbolisme, menantang pembaca untuk mencari makna di dunia tanpa nilai absolut. Karya ini berpengaruh dalam filsafat eksistensial."
   },
   {
     "id": 23,
-    "title": "The Black Swan",
-    "author": "Nassim Nicholas Taleb",
-    "desc": "Buku yang membahas peristiwa tak terduga dengan dampak besar dan bagaimana memahami ketidakpastian dalam keuangan.",
-    "content": "Taleb memperkenalkan konsep 'black swan,' peristiwa langka yang mengubah pasar. Buku ini relevan untuk memahami risiko dan ketidakpastian dalam investasi."
+    "category": "Psikologi",
+    "title": "Thinking, Fast and Slow",
+    "author": "Daniel Kahneman",
+    "desc": "Penjelasan tentang cara manusia berpikir dan membuat keputusan.",
+    "content": "Kahneman memperkenalkan dua sistem berpikir: Sistem 1 (cepat, intuitif) dan Sistem 2 (lambat, analitis). Buku ini membahas bias kognitif, heuristik, dan dampaknya pada pengambilan keputusan. Dengan penelitian psikologi yang kuat, buku ini relevan untuk ekonomi, bisnis, dan kehidupan sehari-hari."
   },
   {
     "id": 24,
-    "title": "Too Big to Fail",
-    "author": "Andrew Ross Sorkin",
-    "desc": "Kronik krisis keuangan 2008, fokus pada peran bank besar dan intervensi pemerintah.",
-    "content": "Buku ini menceritakan bagaimana Wall Street dan Washington menangani krisis, dengan wawasan tentang kebijakan moneter, bailout, dan dampak sistemik kegagalan bank."
+    "category": "Psikologi",
+    "title": "Man’s Search for Meaning",
+    "author": "Viktor E. Frankl",
+    "desc": "Kisah pengalaman Holocaust dan teori logoterapi tentang makna hidup.",
+    "content": "Frankl menceritakan pengalamannya di kamp konsentrasi Nazi dan bagaimana menemukan makna di tengah penderitaan. Ia memperkenalkan logoterapi, yang menekankan bahwa makna hidup adalah motivasi utama manusia. Buku ini menginspirasi pembaca untuk menemukan tujuan dalam keadaan sulit."
   },
   {
     "id": 25,
-    "title": "Debt: The First 5000 Years",
-    "author": "David Graeber",
-    "desc": "Buku yang menelusuri sejarah utang dan perannya dalam membentuk masyarakat dan ekonomi.",
-    "content": "Graeber menggali asal-usul utang, dari barter hingga sistem keuangan modern, menawarkan perspektif antropologis tentang ekonomi dan kekuasaan."
+    "category": "Anak-Anak",
+    "title": "Charlotte’s Web",
+    "author": "E.B. White",
+    "desc": "Kisah persahabatan antara babi Wilbur dan laba-laba Charlotte di peternakan.",
+    "content": "Buku ini menceritakan usaha Charlotte untuk menyelamatkan Wilbur dari penyembelihan dengan menulis pesan di jaringnya. White menggambarkan tema persahabatan, keberanian, dan siklus kehidupan dengan bahasa yang sederhana namun mendalam. Buku ini dicintai anak-anak dan orang dewasa."
   },
   {
     "id": 26,
-    "title": "The Lean Startup",
-    "author": "Eric Ries",
-    "desc": "Panduan untuk membangun bisnis dengan pendekatan efisien, relevan untuk wirausaha dan investor.",
-    "content": "Ries memperkenalkan konsep 'validated learning' dan 'minimum viable product,' membantu pengusaha membangun bisnis dengan risiko minimal, yang penting bagi investor ventura."
+    "category": "Anak-Anak",
+    "title": "The Lion, the Witch and the Wardrobe",
+    "author": "C.S. Lewis",
+    "desc": "Petualangan anak-anak di dunia ajaib Narnia melawan Penyihir Putih.",
+    "content": "Empat bersaudara menemukan Narnia, dunia magis tempat Penyihir Putih berkuasa. Bersama singa Aslan, mereka melawan kejahatan. Lewis menggabungkan alegori Kristen dengan cerita fantasi yang menarik, mengeksplorasi tema keberanian dan pengorbanan. Buku ini adalah bagian dari seri *Chronicles of Narnia*."
   },
   {
     "id": 27,
-    "title": "Zero to One",
-    "author": "Peter Thiel & Blake Masters",
-    "desc": "Buku tentang inovasi dan membangun perusahaan yang menciptakan sesuatu yang benar-benar baru.",
-    "content": "Thiel berargumen bahwa startup sukses harus menciptakan monopoli dengan inovasi radikal, bukan bersaing di pasar yang sudah ada. Penting untuk investor dan wirausaha."
+    "category": "Petualangan",
+    "title": "The Adventures of Huckleberry Finn",
+    "author": "Mark Twain",
+    "desc": "Petualangan Huck Finn dan Jim di Sungai Mississippi mencari kebebasan.",
+    "content": "Huck, seorang anak laki-laki, dan Jim, budak yang melarikan diri, melakukan perjalanan menyusuri Sungai Mississippi. Twain menggambarkan petualangan mereka dengan humor, sambil mengeksplorasi tema rasisme, moralitas, dan kebebasan. Buku ini adalah klasik sastra Amerika dengan narasi yang kuat."
+  },
+  {
+    "id": 28,
+    "category": "Petualangan",
+    "title": "Treasure Island",
+    "author": "Robert Louis Stevenson",
+    "desc": "Kisah bajak laut dan perburuan harta karun di pulau terpencil.",
+    "content": "Jim Hawkins, seorang anak muda, menemukan peta harta karun dan bergabung dengan kru kapal untuk mencarinya. Buku ini penuh dengan intrik, pengkhianatan, dan aksi, dengan karakter seperti Long John Silver. Stevenson menciptakan cerita petualangan klasik yang memikat pembaca segala usia."
+  },
+  {
+    "id": 29,
+    "category": "Horor",
+    "title": "Dracula",
+    "author": "Bram Stoker",
+    "desc": "Novel horor klasik tentang vampir Count Dracula dan perburuan untuk menghentikannya.",
+    "content": "Buku ini mengikuti Jonathan Harker dan kelompok yang dipimpin oleh Van Helsing dalam upaya menghentikan Count Dracula, vampir yang menyebarkan teror. Ditulis dalam format surat dan jurnal, Stoker menciptakan suasana mencekam dengan tema ketakutan, kekuatan jahat, dan kemanusiaan."
+  },
+  {
+    "id": 30,
+    "category": "Horor",
+    "title": "The Shining",
+    "author": "Stephen King",
+    "desc": "Kisah horor psikologis tentang keluarga yang terjebak di hotel berhantu.",
+    "content": "Jack Torrance, istrinya Wendy, dan anaknya Danny tinggal di Hotel Overlook yang terisolasi. Danny, yang memiliki kemampuan psikis, melihat roh jahat yang memengaruhi Jack. King menggabungkan horor supernatural dengan ketegangan psikologis, menjadikan buku ini salah satu karya horor modern terbaik."
   }
 ];
 

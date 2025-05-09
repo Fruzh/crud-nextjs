@@ -26,6 +26,12 @@ export default function Navbar() {
                         Beranda
                     </Link>
                     <Link
+                        href="/about"
+                        className="text-gray-600 hover:text-blue-600 font-medium transition duration-200"
+                    >
+                        Tentang Kami
+                    </Link>
+                    <Link
                         href="/books"
                         className="text-gray-600 hover:text-blue-600 font-medium transition duration-200"
                     >
