@@ -85,7 +85,7 @@ export default function Footer() {
             </div>
             <div className="mt-8 border-t border-gray-700 pt-6 text-center">
                 <p className="text-sm text-gray-400">
-                    © {new Date().getFullYear()} Katalog Buku.
+                    © {new Date().getFullYear()} Fauzan Hafizh Ahmad.
                 </p>
             </div>
         </footer>
