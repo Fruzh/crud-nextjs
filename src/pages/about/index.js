@@ -10,7 +10,7 @@ export default function About() {
     useEffect(() => {
         const timeout = setTimeout(() => {
             setShow(true);
-        }, 10); // Sedikit delay untuk mencegah flicker
+        }, 10);
 
         return () => clearTimeout(timeout);
     }, []);

@@ -22,7 +22,7 @@ export default function Home() {
     useEffect(() => {
         const timeout = setTimeout(() => {
             setShow(true);
-        }, 10); // sedikit delay untuk mencegah flicker
+        }, 10);
 
         return () => clearTimeout(timeout);
     }, []);

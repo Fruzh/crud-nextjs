@@ -15,7 +15,7 @@ export default function Footer() {
     return (
         <footer className="bg-gray-800 text-white py-12 mt-12">
             <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
-                {/* Kolom 1: Logo & Deskripsi */}
+
                 <div>
                     <Link href="/" className="text-2xl font-bold text-blue-400">
                         SESPlus
@@ -25,7 +25,6 @@ export default function Footer() {
                     </p>
                 </div>
 
-                {/* Kolom 2: Navigasi */}
                 <div>
                     <h3 className="text-lg font-semibold text-white mb-4">Usefull link</h3>
                     <ul className="space-y-2 text-gray-300 text-sm">
@@ -68,7 +67,6 @@ export default function Footer() {
                     </ul>
                 </div>
 
-                {/* Kolom 3: Kontak & Sosial */}
                 <div>
                     <h3 className="text-lg font-semibold text-white mb-4">Kontak</h3>
                     <p className="text-gray-300 text-sm">Email: example@sesplus.com</p>

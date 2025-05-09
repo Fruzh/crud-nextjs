@@ -179,7 +179,7 @@ export default function BookList() {
                             value={selectedCategory}
                             onChange={(e) => {
                                 setSelectedCategory(e.target.value);
-                                setVisible(8); // Reset visible saat filter berubah
+                                setVisible(8);
                             }}
                             className="block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white appearance-none transition-all duration-200 hover:bg-gray-50 focus:bg-gray-50 pr-10"
                             aria-label="Filter buku berdasarkan kategori"
@@ -223,7 +223,7 @@ export default function BookList() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {filteredBooks.slice(0, visible).map((b, i) => {
                             const batchIndex = i % 16;
-                            const delay = batchIndex * 100; // Delay: 0ms, 100ms, ..., 700ms
+                            const delay = batchIndex * 100;
 
                             return (
                                 <Link
@@ -329,7 +329,7 @@ export default function BookList() {
                     }
 
                     select {
-                        background-image: none; /* Hilangkan panah default */
+                        background-image: none;
                     }
 
                     select:focus + span svg {
@@ -340,11 +340,11 @@ export default function BookList() {
                     option {
                         padding: 8px;
                         background: white;
-                        color: #1f2937; /* text-gray-800 */
+                        color: #1f2937;
                     }
 
                     option:hover {
-                        background: #f3f4f6; /* bg-gray-100 */
+                        background: #f3f4f6;
                     }
                 `}</style>
             </div>

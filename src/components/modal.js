@@ -5,12 +5,11 @@ export default function Modal({ title, message, onConfirm, onCancel }) {
     const [isExiting, setIsExiting] = useState(false);
 
     useEffect(() => {
-        // Tunda set isEntering ke true untuk memastikan transisi masuk terpicu
         console.log('Modal mounted, starting enter animation');
         const timer = setTimeout(() => {
             setIsEntering(true);
             console.log('Modal enter animation triggered');
-        }, 10); // Penundaan kecil untuk memastikan rendering awal
+        }, 10);
 
         return () => {
             clearTimeout(timer);
@@ -27,7 +26,7 @@ export default function Modal({ title, message, onConfirm, onCancel }) {
             setIsExiting(false);
             onCancel();
             console.log('Modal exit animation complete, cancelled');
-        }, 300); // Sesuaikan dengan durasi transisi
+        }, 300);
     };
 
     const handleConfirm = () => {
@@ -37,7 +36,7 @@ export default function Modal({ title, message, onConfirm, onCancel }) {
             setIsExiting(false);
             onConfirm();
             console.log('Modal exit animation complete, confirmed');
-        }, 300); // Sesuaikan dengan durasi transisi
+        }, 300);
     };
 
     return (

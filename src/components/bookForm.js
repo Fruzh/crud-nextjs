@@ -17,7 +17,6 @@ export default function BookForm({ onSubmit, initialData = {}, onDelete }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const router = useRouter();
 
-    // Daftar kategori yang lebih lengkap
     const categories = [
         'Fiksi',
         'Non-Fiksi',
@@ -49,14 +48,12 @@ export default function BookForm({ onSubmit, initialData = {}, onDelete }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Reset error states
         setTitleError(false);
         setAuthorError(false);
         setDescError(false);
         setContentError(false);
         setCategoryError(false);
 
-        // Validasi field
         let hasError = false;
         if (!title) {
             setTitleError(true);
@@ -126,7 +123,7 @@ export default function BookForm({ onSubmit, initialData = {}, onDelete }) {
         try {
             await onSubmit(bookData);
         } catch (error) {
-            throw error; // Lempar error ke parent (add.js atau [id].js)
+            throw error;
         }
     };
 
@@ -135,7 +132,7 @@ export default function BookForm({ onSubmit, initialData = {}, onDelete }) {
         try {
             await onDelete();
         } catch (error) {
-            throw error; // Lempar error ke parent
+            throw error;
         }
         setIsModalOpen(false);
     };
@@ -308,7 +305,7 @@ export default function BookForm({ onSubmit, initialData = {}, onDelete }) {
 
             <style jsx>{`
                 select {
-                    background-image: none; /* Hilangkan panah default */
+                    background-image: none;
                 }
 
                 select:focus + span svg {
@@ -319,11 +316,11 @@ export default function BookForm({ onSubmit, initialData = {}, onDelete }) {
                 option {
                     padding: 8px;
                     background: white;
-                    color: #1f2937; /* text-gray-800 */
+                    color: #1f2937;
                 }
 
                 option:hover {
-                    background: #f3f4f6; /* bg-gray-100 */
+                    background: #f3f4f6;
                 }
             `}</style>
         </div>

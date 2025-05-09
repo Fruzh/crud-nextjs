@@ -35,9 +35,9 @@ export default function Notification({ message, type, createdAt, onClose }) {
             setTimeout(() => {
                 onClose();
                 console.log(`Notification removed from DOM: ${message}`);
-            }, 300); // Wait for fade-out animation (300ms)
-        }, 5000); // Disappear after 5 seconds
-
+            }, 300);
+        }, 5000);
+        
         return () => {
             clearTimeout(timer);
             console.log(`Notification cleanup: ${message}`);

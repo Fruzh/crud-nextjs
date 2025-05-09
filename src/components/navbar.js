@@ -12,12 +12,10 @@ export default function Navbar() {
     return (
         <header className="bg-white shadow-md sticky top-0 z-50 transition-shadow duration-300">
             <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-                {/* Logo */}
                 <Link href="/" className="text-2xl font-bold text-blue-600">
                     SESPlus
                 </Link>
 
-                {/* Menu Desktop */}
                 <nav className="hidden md:flex items-center gap-8">
                     <Link
                         href="/"
@@ -45,7 +43,6 @@ export default function Navbar() {
                     </Link>
                 </nav>
 
-                {/* Tombol Hamburger untuk Mobile */}
                 <button
                     className="md:hidden text-gray-600 hover:text-blue-600"
                     onClick={toggleMenu}
@@ -54,7 +51,6 @@ export default function Navbar() {
                 </button>
             </div>
 
-            {/* Menu Mobile */}
             {isOpen && (
                 <nav className="md:hidden bg-white shadow-md">
                     <div className="px-6 py-4 flex flex-col gap-4">
