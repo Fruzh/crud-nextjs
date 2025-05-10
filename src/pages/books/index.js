@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
-import { BookText, Pencil, Trash, Plus, Search } from 'lucide-react';
+import { BookText, Pencil, Trash, Plus, Search, X } from 'lucide-react';
 import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
 import Loader from '@/components/loader';
@@ -31,7 +31,7 @@ function levenshteinDistance(a, b) {
 }
 
 function isRepetitiveWord(word) {
-    return /^(.)\1*$/.test(word);
+    return /^(.)\1*$/.test(word) && word.length < 3;
 }
 
 export default function BookList() {
@@ -43,11 +43,13 @@ export default function BookList() {
     const [error, setError] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState('Semua Kategori');
     const [searchQuery, setSearchQuery] = useState('');
+    const [showSuggestions, setShowSuggestions] = useState(false);
     const { ref: loaderRef, inView: loaderInView } = useInView({ threshold: 1 });
     const cardRefs = useRef([]);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
     const buttonRef = useRef(null);
+    const inputRef = useRef(null);
 
     const categories = [
         'Semua Kategori',
@@ -68,64 +70,67 @@ export default function BookList() {
         'Horor'
     ];
 
+    function normalizeString(str) {
+        return (str || '').toLowerCase().trim().replace(/[^\w\s]/gi, '');
+    }
+
+    function getMatchScore(query, text) {
+        const normalizedQuery = normalizeString(query);
+        const normalizedText = normalizeString(text);
+
+        if (!normalizedText || !normalizedQuery) return 0;
+
+        if (normalizedText === normalizedQuery) return 100;
+        if (normalizedText.includes(normalizedQuery)) return 60;
+        if (normalizedText.startsWith(normalizedQuery)) return 50;
+
+        const words = normalizedText.split(/\s+/);
+        if (words.some(word => word.startsWith(normalizedQuery))) return 40;
+
+        const distances = words.map(word => levenshteinDistance(normalizedQuery, word));
+        const minDistance = Math.min(...distances);
+        if (minDistance <= 1) return 30;
+        if (minDistance === 2) return 20;
+
+        return 0;
+    }
+
     const filteredBooks = useMemo(() => {
-        let result = books;
-        if (selectedCategory !== 'Semua Kategori') {
-            result = result.filter((b) => b.category === selectedCategory);
-        }
-        if (searchQuery) {
-            const queryWords = searchQuery.toLowerCase().split(/\s+/).filter(word => word.length >= 3);
-            if (queryWords.length > 0) {
-                const allRepetitive = queryWords.every(isRepetitiveWord);
-                if (allRepetitive) {
-                    return result.filter((b) => {
-                        const title = (b.title || '').toLowerCase();
-                        const author = (b.author || '').toLowerCase();
-                        return queryWords.some((queryWord) => title.includes(queryWord) || author.includes(queryWord));
-                    });
-                }
+        if (!books.length) return [];
 
-                result = result.filter((b) => {
-                    const title = (b.title || '').toLowerCase();
-                    const author = (b.author || '').toLowerCase();
-                    const titleWords = title.split(/\s+/);
-                    const authorWords = author.split(/\s+/);
+        let result = selectedCategory !== 'Semua Kategori'
+            ? books.filter(book => book.category === selectedCategory)
+            : [...books];
 
-                    return queryWords.every((queryWord) => {
-                        const isSubstring =
-                            title.includes(queryWord) ||
-                            author.includes(queryWord) ||
-                            titleWords.some(word => word.startsWith(queryWord)) ||
-                            authorWords.some(word => word.startsWith(queryWord));
-                        if (isSubstring) return true;
+        const keywords = normalizeString(searchQuery).split(/\s+/).filter(k => k.length >= 3);
 
-                        const isWordMatch =
-                            titleWords.some((titleWord) => levenshteinDistance(queryWord, titleWord) <= 2) ||
-                            authorWords.some((authorWord) => levenshteinDistance(queryWord, authorWord) <= 2);
-                        if (isWordMatch) return true;
+        if (!keywords.length || keywords.every(isRepetitiveWord)) return result;
 
-                        const checkSubstrings = (textWords) => {
-                            for (const word of textWords) {
-                                const maxLen = Math.min(word.length, queryWord.length + 2);
-                                for (let len = queryWord.length - 1; len <= maxLen; len++) {
-                                    if (len <= word.length) {
-                                        const substr = word.slice(0, len);
-                                        if (levenshteinDistance(queryWord, substr) <= 1) {
-                                            return true;
-                                        }
-                                    }
-                                }
-                            }
-                            return false;
-                        };
+        const scored = result.map(book => {
+            const fields = [book.title, book.author, book.category];
+            let score = 0;
 
-                        return checkSubstrings(titleWords) || checkSubstrings(authorWords);
-                    });
+            keywords.forEach(keyword => {
+                fields.forEach(field => {
+                    score += getMatchScore(keyword, field);
                 });
-            }
-        }
-        return result;
+            });
+
+            return { book, score };
+        });
+
+        return scored
+            .filter(s => s.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .map(s => s.book);
     }, [books, selectedCategory, searchQuery]);
+
+    const liveSuggestions = useMemo(() => {
+        return searchQuery.length >= 3
+            ? filteredBooks.slice(0, 7)
+            : [];
+    }, [filteredBooks, searchQuery]);
+
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -304,6 +309,12 @@ export default function BookList() {
         setVisible(8);
     };
 
+    const handleClearSearch = () => {
+        setSearchQuery('');
+        setVisible(8);
+        inputRef.current.focus();
+    };
+
     if (error) {
         return (
             <>
@@ -341,34 +352,77 @@ export default function BookList() {
             <div className="max-w-7xl mx-auto px-4 py-10 min-h-[80vh]">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                     <h1 className="text-4xl font-extrabold text-gray-900">Koleksi Buku</h1>
-                    <div className="flex flex-col lg:flex-row gap-4 w-full sm:w-auto">
-                        <div className="relative w-full lg:w-64">
+
+                    <div className="flex flex-col lg:flex-row gap-2 w-full sm:w-auto">
+                        {/* Search Input */}
+                        <div className="relative w-full lg:w-80">
                             <input
+                                ref={inputRef}
                                 type="text"
                                 value={searchQuery}
-                                onChange={handleSearchChange}
-                                placeholder="Cari judul atau penulis..."
-                                className="block w-full px-3 py-2.5 pl-10 border border-gray-300 rounded-lg shadow-sm text-gray-800 bg-white transition-all duration-200 hover:bg-gray-50 focus:bg-gray-50"
-                                aria-label="Cari buku berdasarkan judul atau penulis"
+                                onChange={(e) => {
+                                    setSearchQuery(e.target.value);
+                                    setShowSuggestions(true);
+                                }}
+                                onFocus={() => {
+                                    if (searchQuery.length >= 3 && !isRepetitiveWord(searchQuery)) {
+                                        setShowSuggestions(true);
+                                    }
+                                }}
+                                onBlur={() => {
+                                    setTimeout(() => setShowSuggestions(false), 150);
+                                }}
+                                placeholder="Cari judul, penulis, atau kategori..."
+                                className="w-full pl-10 pr-10 py-2.5 rounded-lg border border-gray-300 shadow-sm text-gray-800 bg-white hover:bg-gray-50 outline-none transition"
                             />
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                                <Search size={20} className="text-gray-500" />
-                            </span>
+
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
+                            {searchQuery && (
+                                <button
+                                    onClick={handleClearSearch}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 outline-none"
+                                    aria-label="Hapus pencarian"
+                                >
+                                    <X size={20} />
+                                </button>
+                            )}
+
+                            {/* Live Suggestions */}
+                            {showSuggestions && liveSuggestions.length > 0 && (
+                                <ul className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
+                                    {liveSuggestions.map((book, idx) => (
+                                        <li
+                                            key={idx}
+                                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-700"
+                                            onClick={() => {
+                                                setSearchQuery(book.title);
+                                                setShowSuggestions(false);
+                                                inputRef.current?.blur();
+                                            }}
+                                        >
+                                            {book.title} <span className="text-gray-400">– {book.author}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </div>
-                        <div className="flex flex-row gap-4 justify-between">
-                            <div className="relative w-48" ref={dropdownRef}>
+
+                        {/* Dropdown dan Tambah Buku */}
+                        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                            {/* Dropdown Kategori */}
+                            <div className="relative w-full sm:w-48" ref={dropdownRef}>
                                 <button
                                     ref={buttonRef}
                                     type="button"
                                     onClick={() => setDropdownOpen((prev) => !prev)}
-                                    className="flex w-full items-center justify-between px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2  text-gray-800 bg-white hover:bg-gray-50 transition-all duration-200"
+                                    className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg border border-gray-300 shadow-sm bg-white text-gray-800 hover:bg-gray-50 transition"
                                     aria-haspopup="listbox"
                                     aria-expanded={dropdownOpen}
                                     aria-label="Pilih kategori buku"
                                 >
                                     <span className="truncate">{selectedCategory}</span>
                                     <svg
-                                        className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : 'rotate-0'}`}
+                                        className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`}
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -379,7 +433,7 @@ export default function BookList() {
                                 </button>
                                 {dropdownOpen && (
                                     <ul
-                                        className="absolute z-10 text-black mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto focus:outline-none"
+                                        className="absolute z-10 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto"
                                         role="listbox"
                                         aria-activedescendant={selectedCategory}
                                     >
@@ -391,9 +445,8 @@ export default function BookList() {
                                                     setDropdownOpen(false);
                                                     setVisible(8);
                                                 }}
-                                                className={`px-4 py-2 text-sm cursor-pointer hover:bg-blue-100 transition-colors duration-200 ${
-                                                    selectedCategory === cat ? 'bg-blue-200 font-semibold' : ''
-                                                }`}
+                                                className={`px-4 py-2 text-sm text-black cursor-pointer hover:bg-blue-100 transition ${selectedCategory === cat ? 'bg-blue-200 font-semibold' : ''
+                                                    }`}
                                                 role="option"
                                                 aria-selected={selectedCategory === cat}
                                                 tabIndex={0}
@@ -411,9 +464,11 @@ export default function BookList() {
                                     </ul>
                                 )}
                             </div>
+
+                            {/* Tombol Tambah Buku */}
                             <Link
                                 href="/books/add"
-                                className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 inline-flex items-center gap-2 transition-all duration-200"
+                                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700  transition shadow-sm"
                                 aria-label="Tambah buku baru"
                             >
                                 <Plus size={20} /> Tambah Buku
@@ -421,6 +476,7 @@ export default function BookList() {
                         </div>
                     </div>
                 </div>
+
 
                 {filteredBooks.length === 0 ? (
                     <p className="text-center text-gray-500 text-lg min-h-screen flex items-center justify-center">
