@@ -433,7 +433,7 @@ export default function BookList() {
                                 </button>
                                 {dropdownOpen && (
                                     <ul
-                                        className="absolute z-10 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto"
+                                        className="absolute mt-1 z-10 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto"
                                         role="listbox"
                                         aria-activedescendant={selectedCategory}
                                     >
